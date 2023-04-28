@@ -1,13 +1,13 @@
 #pragma once
 #include <iostream>
-#include <string>
-#include <atomic>
-#include <thread>
-#include <Windows.h>
+#include <vector>
 
 // start.cpp
-void threadCount();
+void getInput(std::vector<std::string> &tokens);
+void selectThread(bool &running, std::vector<std::string> &tokens);
 void start();
 
 // threads.cpp
-void testThread();
+void supportedThreads();
+void test();
+void counter(int j);
