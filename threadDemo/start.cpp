@@ -1,4 +1,4 @@
-#include "header.h"
+#include "threadDemo.h"
 #include <string>
 #include <sstream>
 #include <atomic>
@@ -7,6 +7,13 @@
 
 std::atomic<bool> testThreadStatus;
 std::atomic<bool> counterThreadStatus;
+
+void supportedThreads()
+{
+	// Return the MAX number of threads supported on user's computer.
+	unsigned int threadCount = std::thread::hardware_concurrency();
+	std::cout << "Supported threads: " << threadCount << std::endl;
+}
 
 void getInput(std::vector<std::string> &tokens)
 {
@@ -39,7 +46,7 @@ void selectThread(bool &running, std::vector<std::string> &tokens)
 		}
 		else
 		{
-			std::cout << "Invalid input. Try again." << std::endl;
+			std::cout << "Invalid command. Try again." << std::endl;
 		}
 	}
 	// Start thread running "counter" function with int parameter.
@@ -47,10 +54,21 @@ void selectThread(bool &running, std::vector<std::string> &tokens)
 	{
 		if (tokens[1] == "start")
 		{
-			int j = std::stoi(tokens[2]);
-			counterThreadStatus = true;
-			std::thread counterThread(counter, j);
-			counterThread.detach();
+			try {
+				int j = std::stoi(tokens[2]);
+				counterThreadStatus = true;
+				std::thread counterThread(counter, j);
+				counterThread.detach();
+				//throw exception_code;
+			}
+			catch (std::invalid_argument)
+			{
+				std::cout << "Counter limit is not a number. Try again.\n";
+			}
+			catch (std::out_of_range)
+			{
+				std::cout << "Counter limit is out of range. Try again.\n	";
+			}
 		}
 		else if (tokens[1] == "stop")
 		{
@@ -58,7 +76,7 @@ void selectThread(bool &running, std::vector<std::string> &tokens)
 		}
 		else
 		{
-			std::cout << "Invalid input. Try again." << std::endl;
+			std::cout << "Invalid command. Try again." << std::endl;
 		}
 	}
 	// Terminate all threads and program.
@@ -72,19 +90,7 @@ void selectThread(bool &running, std::vector<std::string> &tokens)
 	// Reject all other inputs.
 	else
 	{
-		std::cout << "Invalid input. Try again." << std::endl;
+		std::cout << "Invalid command. Try again." << std::endl;
 	}
 	tokens.clear();
-}
-
-void start()
-{
-	supportedThreads();
-	bool running = true;
-	std::vector<std::string> tokens;
-	while (running)
-	{
-		getInput(tokens);
-		selectThread(running, tokens);
-	}
 }
