@@ -1,19 +1,6 @@
-#include "threadDemo.h"
-#include <string>
-#include <sstream>
-#include <atomic>
-#include <thread>
-#include <Windows.h>
-
-std::atomic<bool> testThreadStatus;
-std::atomic<bool> counterThreadStatus;
-
-void supportedThreads()
-{
-	// Return the MAX number of threads supported on user's computer.
-	unsigned int threadCount = std::thread::hardware_concurrency();
-	std::cout << "Supported threads: " << threadCount << std::endl;
-}
+#include "start.h"
+#include "threads.h"
+#include "atomicBool.h"
 
 void getInput(std::vector<std::string> &tokens)
 {
@@ -29,54 +16,30 @@ void getInput(std::vector<std::string> &tokens)
 	} while (tokens.empty());
 }
 
-void selectThread(bool &running, std::vector<std::string> &tokens)
+void startMenu(bool &running, std::vector<std::string> &tokens)
 {
 	// Start thread running dummy "test" thread, with no parameters.
-	if (tokens[0] == "test")
+	if (tokens[0] == "dummy")
 	{
-		if (tokens[1] == "start")
-		{
-			testThreadStatus = true;
-			std::thread testThread(test);
-			testThread.detach();
-		}
-		else if (tokens[1] == "stop")
-		{
-			testThreadStatus = false;
-		}
-		else
-		{
-			std::cout << "Invalid command. Try again." << std::endl;
-		}
+		startDummyThread(tokens);
 	}
 	// Start thread running "counter" function with int parameter.
 	else if (tokens[0] == "counter")
 	{
-		if (tokens[1] == "start")
+		startCounterThread(tokens);
+	}
+	// Stop all active threads.
+	else if (tokens[0] == "stop")
+	{
+		if (tokens[1] == "all")
 		{
-			try {
-				int j = std::stoi(tokens[2]);
-				counterThreadStatus = true;
-				std::thread counterThread(counter, j);
-				counterThread.detach();
-				//throw exception_code;
-			}
-			catch (std::invalid_argument)
-			{
-				std::cout << "Counter limit is not a number. Try again.\n";
-			}
-			catch (std::out_of_range)
-			{
-				std::cout << "Counter limit is out of range. Try again.\n	";
-			}
-		}
-		else if (tokens[1] == "stop")
-		{
+			testThreadStatus = false;
 			counterThreadStatus = false;
+			std::cout << "All threads stopped.\n";
 		}
 		else
 		{
-			std::cout << "Invalid command. Try again." << std::endl;
+			std::cout << "Invalid command. Try again.\n";
 		}
 	}
 	// Terminate all threads and program.
@@ -85,12 +48,12 @@ void selectThread(bool &running, std::vector<std::string> &tokens)
 		testThreadStatus = false;
 		counterThreadStatus = false;
 		running = false;
-		Sleep(1000);
+		Sleep(1500);
 	}
 	// Reject all other inputs.
 	else
 	{
-		std::cout << "Invalid command. Try again." << std::endl;
+		std::cout << "Invalid command. Try again.\n";
 	}
 	tokens.clear();
 }

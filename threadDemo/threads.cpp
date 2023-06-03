@@ -1,29 +1,57 @@
-#include "threadDemo.h"
-#include <atomic>
-#include <thread>
-#include <Windows.h>
+#include "threads.h"
+#include "functions.h"
+#include "atomicBool.h"
 
-extern std::atomic<bool> testThreadStatus;
-extern std::atomic<bool> counterThreadStatus;
-
-void test()
+void supportedThreads()
 {
-	// Dummy thread.
-	std::cout << "testThread started." << std::endl;
-	while (testThreadStatus) {/* do nothing. */ }
-	std::cout << "testThread stopped." << std::endl;
+	// Return the MAX number of threads supported on user's computer.
+	unsigned int threadCount = std::thread::hardware_concurrency();
+	std::cout << "Supported threads: " << threadCount << '\n';
 }
 
-void counter(int j)
+void startDummyThread(std::vector<std::string> &tokens)
 {
-	// Thread counting up to a user-specified number.
-	std::cout << "counterThread started." << std::endl;
-	int i = 0;
-	while (counterThreadStatus && i < j)
+	if (tokens[1] == "start")
 	{
-		std::cout << i << std::endl;
-		++i;
-		Sleep(5000);
+		testThreadStatus = true;
+		std::thread testThread(dummy);
+		testThread.detach();
 	}
-	std::cout << "counterThread stopped." << std::endl;
+	else if (tokens[1] == "stop")
+	{
+		testThreadStatus = false;
+	}
+	else
+	{
+		std::cout << "Invalid command. Try again." << '\n';
+	}
+}
+
+void startCounterThread(std::vector<std::string> &tokens)
+{
+	if (tokens[1] == "start")
+	{
+		try {
+			int counterMAX = std::stoi(tokens[2]);
+			counterThreadStatus = true;
+			std::thread counterThread(counter, counterMAX);
+			counterThread.detach();
+		}
+		catch (std::invalid_argument)
+		{
+			std::cout << "Counter limit is not a number. Try again.\n";
+		}
+		catch (std::out_of_range)
+		{
+			std::cout << "Counter limit is out of range. Try again.\n	";
+		}
+	}
+	else if (tokens[1] == "stop")
+	{
+		counterThreadStatus = false;
+	}
+	else
+	{
+		std::cout << "Invalid command. Try again." << '\n';
+	}
 }

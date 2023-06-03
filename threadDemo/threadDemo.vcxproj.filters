@@ -21,12 +21,27 @@
     <ClCompile Include="start.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="functions.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="atomicBool.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="threads.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="threadDemo.h">
+    <ClInclude Include="atomicBool.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="start.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="functions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="threads.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

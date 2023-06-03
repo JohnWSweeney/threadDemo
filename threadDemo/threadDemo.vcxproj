@@ -123,12 +123,17 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="atomicBool.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="start.cpp" />
+    <ClCompile Include="functions.cpp" />
     <ClCompile Include="threads.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="threadDemo.h" />
+    <ClInclude Include="atomicBool.h" />
+    <ClInclude Include="functions.h" />
+    <ClInclude Include="start.h" />
+    <ClInclude Include="threads.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\README.md" />
